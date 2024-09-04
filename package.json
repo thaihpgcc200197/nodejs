@@ -1,21 +1,29 @@
 {
-  "name": "notification",
+  "name": "crud_app",
   "version": "1.0.0",
-  "description": "",
+  "description": "crud application with express and mongodb",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js",
     "start": "node server.js"
   },
-  "author": "",
+  "keywords": [
+    "crud",
+    "mongodb"
+  ],
+  "author": "yuu",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
+    "axios": "^0.21.4",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "mssql": "^6.0.0",
-    "mysql": "^2.17.1",
-    "socket.io": "^2.5.1",
-    "socket.io-client": "^4.7.5"
+    "mongoose": "^5.13.22",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }

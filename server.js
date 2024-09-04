@@ -1,40 +1,35 @@
 const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const http = require('http');
-const socketIo = require('socket.io');
+const dotenv = require('dotenv');
+const morgan = require('morgan');
+const bodyparser = require("body-parser");
 const path = require('path');
 
+const connectDB = require('./server/database/connection');
+
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
 
-// Middleware setup
-app.use(express.static(path.join(__dirname, 'assets'))); 
-app.use(bodyParser.json()); 
-app.use(bodyParser.urlencoded({ extended: true })); 
-app.use(cors()); 
+dotenv.config( { path : 'config.env'} )
+const PORT = process.env.PORT|| 8080
 
-// Serve the main HTML file
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
-// Socket.IO setup
-io.on('connection', (socket) => {
-  
-  console.log('A user connected');
+// log requests
+app.use(morgan('tiny'));
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
+// mongodb connection
+connectDB();
 
-  socket.on("send", (data) => {
-    socket.broadcast.emit("new-notification", data);
-  }); 
-});
+// parse request to body-parser
+app.use(bodyparser.urlencoded({ extended : true}))
 
-// Start the server
-const PORT = 3000;
-server.listen(PORT, () => {
-  
-});
+// set view engine
+app.set("view engine", "ejs")
+
+
+// load assets
+app.use('/css', express.static(path.resolve(__dirname, "assets/css")))
+app.use('/img', express.static(path.resolve(__dirname, "assets/img")))
+app.use('/js', express.static(path.resolve(__dirname, "assets/js")))
+
+// load routers
+app.use('/', require('./server/routes/router'))
+
+app.listen(PORT,"0.0.0.0", ()=> { console.log(`Server is running on http://localhost:${PORT}`)});
